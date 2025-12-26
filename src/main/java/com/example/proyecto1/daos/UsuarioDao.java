@@ -2,9 +2,12 @@ package com.example.proyecto1.daos;
 
 import com.example.proyecto1.models.entities.Role;
 import com.example.proyecto1.models.entities.Usuario;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class UsuarioDao{
@@ -33,4 +36,12 @@ public class UsuarioDao{
             usuario.getRole().name());
     }
 
+    public Optional<Usuario> findByEmail(String email) {
+        String sql = "SELECT * FROM usuarios WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, usuarioRowMapper, email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 }
