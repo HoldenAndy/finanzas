@@ -6,7 +6,6 @@ import com.example.proyecto1.models.dtos.LoginPeticion;
 import com.example.proyecto1.models.dtos.RegisterPeticion;
 import com.example.proyecto1.models.entities.Role;
 import com.example.proyecto1.models.entities.Usuario;
-import io.jsonwebtoken.Jwts;
 import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,13 +14,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class AuthServices {
+public class AuthServiceImpl implements AuthService{
     private final UsuarioDao usuarioDao;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final EmailService emailService;
 
-    public AuthServices(UsuarioDao usuarioDao, PasswordEncoder passwordEncoder, JwtService jwtService, EmailService emailService) {
+    public AuthServiceImpl(UsuarioDao usuarioDao, PasswordEncoder passwordEncoder, JwtService jwtService, EmailService emailService) {
         this.usuarioDao = usuarioDao;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;

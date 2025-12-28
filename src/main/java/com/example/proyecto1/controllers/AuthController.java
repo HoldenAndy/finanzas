@@ -3,9 +3,7 @@ package com.example.proyecto1.controllers;
 import com.example.proyecto1.models.dtos.AuthResponse;
 import com.example.proyecto1.models.dtos.LoginPeticion;
 import com.example.proyecto1.models.dtos.RegisterPeticion;
-import com.example.proyecto1.models.entities.Usuario;
-import com.example.proyecto1.services.AuthServices;
-import org.springframework.http.HttpStatus;
+import com.example.proyecto1.services.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +14,9 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthServices authServices;
+    private final AuthService authServices;
 
-    public AuthController(AuthServices authServices) {
+    public AuthController(AuthService authServices) {
         this.authServices = authServices;
     }
 
