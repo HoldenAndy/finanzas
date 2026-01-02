@@ -1,6 +1,6 @@
 package com.example.proyecto1.auth.controller;
 
-import com.example.proyecto1.auth.dtos.AuthResponse;
+import com.example.proyecto1.auth.dtos.AuthRespuesta;
 import com.example.proyecto1.auth.dtos.LoginPeticion;
 import com.example.proyecto1.auth.dtos.RegisterPeticion;
 import com.example.proyecto1.auth.services.AuthService;
@@ -35,7 +35,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loguearUsuario(@RequestBody LoginPeticion loginPeticion){
         try {
-            AuthResponse token = authServices.login(loginPeticion);
+            AuthRespuesta token = authServices.login(loginPeticion);
             return ResponseEntity.ok(token);
         }catch (Exception e){
             return ResponseEntity.status(401).body(e.getMessage());

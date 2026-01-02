@@ -5,7 +5,7 @@ import com.example.proyecto1.categorias.daos.CategoriaDao;
 import com.example.proyecto1.email.services.EmailService;
 import com.example.proyecto1.jwt.services.JwtService;
 import com.example.proyecto1.usuarios.daos.UsuarioDao;
-import com.example.proyecto1.auth.dtos.AuthResponse;
+import com.example.proyecto1.auth.dtos.AuthRespuesta;
 import com.example.proyecto1.auth.dtos.LoginPeticion;
 import com.example.proyecto1.auth.dtos.RegisterPeticion;
 import com.example.proyecto1.usuarios.entities.Role;
@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AuthResponse login (LoginPeticion request){
+    public AuthRespuesta login (LoginPeticion request){
         Usuario usuario = usuarioDao.findByEmail(request.email()).orElseThrow(() ->
             new RuntimeException("Credenciales invalidas."));
 
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String token = jwtService.generateToken(usuario);
-        return new AuthResponse(token);
+        return new AuthRespuesta(token);
     }
 
     @Override

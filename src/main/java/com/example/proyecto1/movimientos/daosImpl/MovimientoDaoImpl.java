@@ -64,11 +64,7 @@ public class MovimientoDaoImpl implements MovimientoDao {
 
     @Override
     public BigDecimal calcularSaldoTotal(Long usuarioId) {
-        String sql = "SELECT " +
-                "COALESCE(SUM(CASE WHEN tipo = 'INGRESO' THEN monto_base ELSE 0 END), 0) - " +
-                "COALESCE(SUM(CASE WHEN tipo = 'EGRESO' THEN monto_base ELSE 0 END), 0) " +
-                "FROM movimientos WHERE usuario_id = ?";
-
+        String sql = "SELECT fun_calcular_saldo(?)";
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, usuarioId);
     }
 }
