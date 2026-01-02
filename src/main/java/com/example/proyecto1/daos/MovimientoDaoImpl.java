@@ -1,5 +1,6 @@
 package com.example.proyecto1.daos;
 
+import com.example.proyecto1.models.entities.Moneda;
 import com.example.proyecto1.models.entities.Movimiento;
 import com.example.proyecto1.models.entities.TipoMovimiento;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,45 +19,55 @@ public class MovimientoDaoImpl implements MovimientoDao{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public final RowMapper<Movimiento> movimientoRowMapper = (rs, rowNum) -> {
-        Movimiento movimiento = new Movimiento();
-        movimiento.setId(rs.getLong("id"));
-        movimiento.setUsuarioId(rs.getLong("usuario_id"));
-        movimiento.setCategoriaId(rs.getLong("categoria_id"));
-        movimiento.setMonto(rs.getBigDecimal("monto"));
-        movimiento.setFecha(rs.getDate("fecha").toLocalDate());
-        movimiento.setDescripcion(rs.getString("descripcion"));
-        movimiento.setTipo(TipoMovimiento.valueOf(rs.getString("tipo")));
-        return movimiento;
+    private final RowMapper<Movimiento> movimientoRowMapper = (rs, rowNum) -> {
+        Movimiento mov = new Movimiento();
+        mov.setId(rs.getLong("id"));
+        mov.setUsuarioId(rs.getLong("usuario_id"));
+        mov.setCategoriaId(rs.getLong("categoria_id"));
+        mov.setNombreCategoria(rs.getString("nombre_categoria"));
+        mov.setMonto(rs.getBigDecimal("monto"));
+        mov.setMoneda(Moneda.valueOf(rs.getString("moneda")));
+        mov.setMontoBase(rs.getBigDecimal("monto_base"));
+        mov.setDescripcion(rs.getString("descripcion"));
+        mov.setTipo(TipoMovimiento.valueOf(rs.getString("tipo")));
+        mov.setFecha(rs.getDate("fecha").toLocalDate());
+        return mov;
     };
 
     @Override
-    public void saveMovimiento(Movimiento movimiento) {
-        String sql = "INSERT INTO movimientos (usuario_id, categoria_id, monto, fecha, descripcion, tipo) VALUES (?, ?, ?, ?, ?, ?)";
+    public void saveMovimiento(Movimiento mov) {
+        String sql = "INSERT INTO movimientos (usuario_id, categoria_id, monto, moneda, monto_base, descripcion, tipo, fecha) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
         jdbcTemplate.update(sql,
-                movimiento.getUsuarioId(),
-                movimiento.getCategoriaId(),
-                movimiento.getMonto(),
-                movimiento.getFecha(),
-                movimiento.getDescripcion(),
-                movimiento.getTipo().name()
+                mov.getUsuarioId(),
+                mov.getCategoriaId(),
+                mov.getMonto(),
+                mov.getMoneda().name(),
+                mov.getMontoBase(),
+                mov.getDescripcion(),
+                mov.getTipo().name(),
+                mov.getFecha()
         );
     }
 
     @Override
     public List<Movimiento> findAllByUsuarioId(Long usuarioId) {
-        String sql = "SELECT * FROM movimientos WHERE usuario_id = ? ORDER BY fecha DESC";
+        String sql = "SELECT m.*, c.nombre as nombre_categoria " +
+                "FROM movimientos m " +
+                "INNER JOIN categorias c ON m.categoria_id = c.id " +
+                "WHERE m.usuario_id = ? " +
+                "ORDER BY m.fecha DESC";
         return jdbcTemplate.query(sql, movimientoRowMapper, usuarioId);
     }
 
     @Override
     public BigDecimal calcularSaldoTotal(Long usuarioId) {
         String sql = "SELECT " +
-                "SUM(CASE WHEN tipo = 'INGRESO' THEN monto ELSE 0 END) - " +
-                "SUM(CASE WHEN tipo = 'EGRESO' THEN monto ELSE 0 END) " +
+                "COALESCE(SUM(CASE WHEN tipo = 'INGRESO' THEN monto_base ELSE 0 END), 0) - " +
+                "COALESCE(SUM(CASE WHEN tipo = 'EGRESO' THEN monto_base ELSE 0 END), 0) " +
                 "FROM movimientos WHERE usuario_id = ?";
 
-        BigDecimal saldo = jdbcTemplate.queryForObject(sql, BigDecimal.class, usuarioId);
-        return saldo != null ? saldo : BigDecimal.ZERO;
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, usuarioId);
     }
 }

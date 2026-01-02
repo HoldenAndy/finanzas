@@ -29,4 +29,10 @@ public class MovimientosController {
     public ResponseEntity<?> listarMovimientos(Principal principal) {
         return ResponseEntity.ok(movimientoService.listarMisMovimientos(principal.getName()));
     }
+
+    @GetMapping("/balance")
+    public ResponseEntity<?> obtenerBalance(Principal principal) {
+        // Usamos el email del token para saber de quién es el balance
+        return ResponseEntity.ok(movimientoService.obtenerResumenFinanciero(principal.getName()));
+    }
 }

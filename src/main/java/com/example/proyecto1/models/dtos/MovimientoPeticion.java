@@ -1,5 +1,6 @@
 package com.example.proyecto1.models.dtos;
 
+import com.example.proyecto1.models.entities.Moneda;
 import com.example.proyecto1.models.entities.TipoMovimiento;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
@@ -9,6 +10,9 @@ public record MovimientoPeticion(
         @NotNull(message = "El monto es obligatorio")
         @DecimalMin(value = "0.01", message = "El monto debe ser mayor a cero")
         BigDecimal monto,
+
+        @NotNull(message = "La moneda es obligatoria")
+        Moneda moneda,
 
         @NotNull(message = "La categoría es obligatoria")
         Long categoriaId,

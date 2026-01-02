@@ -7,22 +7,28 @@ public class Movimiento {
     private Long id;
     private Long usuarioId;
     private Long categoriaId;
+    private String nombreCategoria;
     private BigDecimal monto;
     private LocalDate fecha;
     private String descripcion;
     private TipoMovimiento tipo;
+    private Moneda moneda;
+    private BigDecimal montoBase;
 
     public Movimiento() {
     }
 
-    public Movimiento(Long id, Long usuarioId, Long categoriaId, BigDecimal monto, LocalDate fecha, String descripcion, TipoMovimiento tipo) {
+    public Movimiento(Long id, Long usuarioId, Long categoriaId, String nombreCategoria, BigDecimal monto, LocalDate fecha, String descripcion, TipoMovimiento tipo, Moneda moneda, BigDecimal montoBase) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.categoriaId = categoriaId;
+        this.nombreCategoria = nombreCategoria;
         this.monto = monto;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.tipo = tipo;
+        this.moneda = moneda;
+        this.montoBase = montoBase;
     }
 
     public Long getId() {
@@ -47,6 +53,14 @@ public class Movimiento {
 
     public void setCategoriaId(Long categoriaId) {
         this.categoriaId = categoriaId;
+    }
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
     }
 
     public BigDecimal getMonto() {
@@ -79,5 +93,21 @@ public class Movimiento {
 
     public void setTipo(TipoMovimiento tipo) {
         this.tipo = tipo;
+    }
+
+    public Moneda getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(Moneda moneda) {
+        this.moneda = moneda;
+    }
+
+    public BigDecimal getMontoBase() {
+        return montoBase;
+    }
+
+    public void setMontoBase(BigDecimal montoBase) {
+        this.montoBase = montoBase;
     }
 }
